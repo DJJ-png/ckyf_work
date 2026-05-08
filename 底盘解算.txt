@@ -1,0 +1,25 @@
+float body_v=,body_theta=,a=,b=;            //车的整体速度与方向，全向轮与x,y轴的夹角
+float vx,vy;
+float rx=,ry=,s=,r=;           //s为轮半径，r为中心到轮中心的距离
+float car_omega;             //通过编码器+定时器来计算当前角速度
+float steer_wheel_vx,steer_wheel_vy;
+float steer_wheel_omega;
+float set_speed_1,set_speed_2;
+
+float steer_wheel_calc(float body_v,float body_theta,float car_omega,float *steer_angle,float *steer_wheel_omega){
+	vx=body_v*cosf(body_theta);                //x方向分速度
+	vy=body_v*sinf(body_theta);                //y方向分速度
+	steer_wheel_vx=vx-(wheel_omega_1*ry);              //舵轮的x方向速度
+	steer_wheel_vy=vy+(wheel_omega_1*rx);             //舵轮的y方向速度
+	steer_wheel_omega=sqrt((steer_wheel_vx*steer_wheel_vx)+(steer_wheel_vy*steer_wheel_vy))/s        //电机角速度
+	steer_angle=arctan2(steer_wheel_vx,steer_wheel_vy);	             //舵轮方向
+}
+
+while(1){
+	steer_wheel_calc(body_v,body_theta,wheel_omega_1,&steer_angle,&steer_wheel_omega);
+	vx=body_v*cosf(body_theta);              //x方向分速度
+	vy=body_v*sinf(body_theta);               //y方向分速度
+	set_speed_1=((-cosf(a)*vx)+(sinf(a)*vy)+car_omega*r)/s;            //左上的电机
+	set_speed_2=((cosf(a)*vx)+(sinf(a)*vy)+car_omega*r)/s              //右上的电机
+}
+
